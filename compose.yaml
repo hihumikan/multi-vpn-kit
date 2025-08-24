@@ -10,3 +10,19 @@ services:
       - "10000:10000"
       - "10001:10001"
       - "10002:10002"
+  softether-server:
+    image: siomiz/softethervpn
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - 500:500/udp
+      - 4500:4500/udp
+      - 1701:1701/tcp
+      - 5555:5555/tcp
+    container_name: softether-server
+    environment:
+      - USERNAME=${VPN_USER}
+      - PASSWORD=${VPN_PASSWORD}
+      - SPW=${VPN_SERVER_PASSWORD}
+      - PSK=${VPN_PSK}
+      - HPW=${VPN_HUB_PASSWORD}
