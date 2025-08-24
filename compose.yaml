@@ -15,9 +15,15 @@ services:
     cap_add:
       - NET_ADMIN
     ports:
+      # L2TP/IPsec
       - 500:500/udp
       - 4500:4500/udp
-      - 1701:1701/tcp
+      - 1701:1701/udp
+      # OpenVPN互換 & SoftEther
+      - 1194:1194/udp
+      - 443:443/tcp
+      - 992:992/tcp
+      # 管理/互換用（既存）
       - 5555:5555/tcp
     container_name: softether-server
     environment:
