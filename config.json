@@ -1,25 +1,108 @@
 {
     "log": {
+        "access": "/dev/stdout",
+        "error": "/dev/stderr",
         "loglevel": "info"
+    },
+    "stats": {},
+    "policy": {
+        "system": {
+            "statsInboundUplink": true,
+            "statsInboundDownlink": true
+        }
     },
     "inbounds": [
         {
-            "protocol": "socks",
+            "tag": "vless-ws-in",
             "listen": "0.0.0.0",
-            "port": 10086,
+            "port": 10000,
+            "protocol": "vless",
             "settings": {
-                "auth": "noauth",
-                "udp": true
+                "clients": [
+                    {
+                        "id": "9f4add9a-8872-43ea-a0eb-381d47538eb9"
+                    }
+                ],
+                "decryption": "none"
+            },
+            "streamSettings": {
+                "network": "ws",
+                "wsSettings": {
+                    "path": "/vless"
+                }
+            }
+        },
+        {
+            "tag": "vmess-ws-in",
+            "listen": "0.0.0.0",
+            "port": 10001,
+            "protocol": "vmess",
+            "settings": {
+                "clients": [
+                    {
+                        "id": "9efdedc3-890f-4ef9-85c8-775169f32298",
+                        "alterId": 0
+                    }
+                ]
+            },
+            "streamSettings": {
+                "network": "ws",
+                "wsSettings": {
+                    "path": "/vmess"
+                }
+            }
+        },
+        {
+            "tag": "vless-grpc-in",
+            "listen": "0.0.0.0",
+            "port": 10002,
+            "protocol": "vless",
+            "settings": {
+                "clients": [
+                    {
+                        "id": "c7130b9a-1b17-4bcc-8902-875081c347b7"
+                    }
+                ],
+                "decryption": "none"
+            },
+            "streamSettings": {
+                "network": "grpc",
+                "grpcSettings": {
+                    "serviceName": "grpc",
+                    "idle_timeout": 10
+                }
             }
         }
     ],
     "outbounds": [
         {
+            "tag": "direct",
             "protocol": "freedom"
         },
         {
-            "protocol": "blackhole",
-            "tag": "blocked"
+            "tag": "blocked",
+            "protocol": "blackhole"
         }
-    ]
+    ],
+    "routing": {
+        "domainStrategy": "IPIfNonMatch",
+        "rules": [
+            {
+                "type": "field",
+                "inboundTag": [
+                    "vless-ws-in",
+                    "vmess-ws-in",
+                    "vless-grpc-in"
+                ],
+                "outboundTag": "direct"
+            },
+            {
+                "type": "field",
+                "ip": [
+                    "geoip:private"
+                ],
+                "outboundTag": "direct"
+            }
+        ]
+    }
 }

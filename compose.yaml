@@ -7,4 +7,6 @@ services:
     volumes:
       - ./config.json:/etc/v2ray/config.json:ro
     ports:
-      - "10086:10086"
+      - "10000:10000"
+      - "10001:10001"
+      - "10002:10002"
