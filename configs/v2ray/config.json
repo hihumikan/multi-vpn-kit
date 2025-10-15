@@ -1,21 +1,19 @@
 {
   "log": {
-    "loglevel": "warning"
+    "access": "/var/log/v2ray/access.log",
+    "error": "/var/log/v2ray/error.log",
+    "loglevel": "error"
   },
   "inbounds": [
     {
-      "port": 3456,
+      "port": 80,
       "protocol": "vmess",
-      "allocate": {
-        "strategy": "always"
-      },
       "settings": {
         "clients": [
           {
             "id": "9e4e86c2-cdf4-4ef8-abdb-00cf7eda9e72",
-            "level": 1,
-            "alterId": 0,
-            "email": "a@qqey.net"
+            "level": 0,
+            "alterId": 0
           }
         ],
         "disableInsecureEncryption": true
@@ -23,31 +21,42 @@
       "streamSettings": {
         "network": "ws",
         "wsSettings": {
-          "connectionReuse": true,
-          "path": "/graphql"
-        },
-        "security": "none",
-        "tcpSettings": {
-          "header": {
-            "type": "http",
-            "response": {
-              "version": "1.1",
-              "status": "200",
-              "reason": "OK",
-              "headers": {
-                "Content-Type": [
-                  "application/octet-stream",
-                  "application/x-msdownload",
-                  "text/html",
-                  "application/x-shockwave-flash"
-                ],
-                "Transfer-Encoding": ["chunked"],
-                "Connection": ["keep-alive"],
-                "Pragma": "no-cache"
-              }
-            }
-          }
+          "path": "/vmess/"
         }
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls"
+        ]
+      }
+    },
+    {
+      "port": 443,
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "id": "9e4e86c2-cdf4-4ef8-abdb-00cf7eda9e72",
+            "level": 0,
+            "alterId": 0
+          }
+        ],
+        "disableInsecureEncryption": true
+      },
+      "streamSettings": {
+        "network": "ws",
+        "wsSettings": {
+          "path": "/vmess/"
+        }
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls"
+        ]
       }
     }
   ],
@@ -62,8 +71,17 @@
       "tag": "blocked"
     }
   ],
+  "dns": {
+    "servers": [
+      "1.1.1.1",
+      "1.0.0.1",
+      "8.8.8.8",
+      "8.8.4.4",
+      "localhost"
+    ]
+  },
   "routing": {
-    "domainStrategy": "AsIs",
+    "domainStrategy": "IPOnDemand",
     "rules": [
       {
         "type": "field",
@@ -82,14 +100,15 @@
           "203.0.113.0/24",
           "::1/128",
           "fc00::/7",
-          "fe80::/10",
-          "geoip:private"
+          "fe80::/10"
         ],
         "outboundTag": "blocked"
       },
       {
         "type": "field",
-        "protocol": ["bittorrent"],
+        "protocol": [
+          "bittorrent"
+        ],
         "outboundTag": "blocked"
       }
     ]
