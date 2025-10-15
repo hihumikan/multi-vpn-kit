@@ -1,4 +1,4 @@
-:80 {
+oracle1.qqey.net {
   log stdout
   errors stderr
   root /srv/web
