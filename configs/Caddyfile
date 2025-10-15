@@ -7,12 +7,14 @@ oracle1.qqey.net {
     output stdout
     format console
   }
-  root * /srv/web
-  file_server
-  reverse_proxy /graphql v2ray:3456 {
+
+  @vmess path /vmess*
+  reverse_proxy @vmess v2ray:16823 {
     header_up Host {http.request.host}
     header_up X-Real-IP {http.request.remote}
     header_up X-Forwarded-Proto {http.request.scheme}
     header_up -Origin
   }
+
+  respond "OK" 200
 }
