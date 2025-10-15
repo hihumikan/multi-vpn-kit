@@ -6,7 +6,34 @@
   },
   "inbounds": [
     {
-      "port": 16823,
+      "port": 80,
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "id": "9e4e86c2-cdf4-4ef8-abdb-00cf7eda9e72",
+            "level": 0,
+            "alterId": 0
+          }
+        ],
+        "disableInsecureEncryption": true
+      },
+      "streamSettings": {
+        "network": "ws",
+        "wsSettings": {
+          "path": "/vmess/"
+        }
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls"
+        ]
+      }
+    },
+    {
+      "port": 443,
       "protocol": "vmess",
       "settings": {
         "clients": [
